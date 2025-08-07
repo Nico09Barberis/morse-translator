@@ -50,6 +50,7 @@ const Translator = () => {
   const [morse, setMorse] = useState("");
   const [copied, setCopied] = useState(false);
   const [mode, setMode] = useState("textToMorse"); // o "morseToText"
+  const [activeIndex, setActiveIndex] = useState(null);
 
   const translateToMorse = () => {
     const translated = text
@@ -79,6 +80,40 @@ const Translator = () => {
       .map((symbol) => morseToText[symbol] || "")
       .join("");
     setMorse(translated);
+  };
+
+  //===============================================================
+  //                            AUDIO
+  //===============================================================
+
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  const playMorseAudio = async () => {
+    if (!morse || isPlaying) return;
+
+    setIsPlaying(true);
+
+    const symbols = morse.split("");
+
+    for (let i = 0; i < symbols.length; i++) {
+      const symbol = symbols[i];
+      setActiveIndex(i);
+
+      if (symbol === ".") {
+        playBeep(100);
+        await new Promise((r) => setTimeout(r, 200));
+      } else if (symbol === "-") {
+        playBeep(300);
+        await new Promise((r) => setTimeout(r, 400));
+      } else if (symbol === " ") {
+        await new Promise((r) => setTimeout(r, 200));
+      } else if (symbol === "/") {
+        await new Promise((r) => setTimeout(r, 600));
+      }
+    }
+
+    setActiveIndex(null);
+    setIsPlaying(false);
   };
 
   return (
@@ -131,8 +166,19 @@ const Translator = () => {
         {mode === "textToMorse" ? "Traducir a Morse" : "Traducir a Texto"}
       </button>
 
-      <div className="mt-4 p-2 bg-gray-200 dark:bg-gray-700 rounded text-sm text-gray-800 dark:text-white break-words">
-        {morse}
+      <div className="mt-4 p-2 bg-gray-200 dark:bg-gray-700 rounded text-sm text-gray-800 dark:text-white break-words flex flex-wrap gap-1 justify-start">
+        {morse.split("").map((char, i) => (
+          <span
+            key={i}
+            className={`transition-all px-1 rounded ${
+              i === activeIndex
+                ? "bg-yellow-400 text-black scale-125 font-bold"
+                : ""
+            }`}
+          >
+            {char === " " ? "\u00A0" : char}
+          </span>
+        ))}
       </div>
 
       <button
@@ -146,8 +192,33 @@ const Translator = () => {
       {copied && (
         <p className="text-green-600 text-sm mt-1 text-center">¡Copiado!</p>
       )}
+
+      <button
+        onClick={playMorseAudio}
+        disabled={!morse || isPlaying}
+        className="w-full mt-2 bg-purple-500 text-white py-2 px-4 rounded hover:bg-purple-600 transition disabled:opacity-50"
+      >
+        {isPlaying ? "Reproduciendo..." : "🔊 Reproducir Morse"}
+      </button>
     </div>
   );
 };
 
 export default Translator;
+
+const playBeep = (duration = 100, frequency = 600) => {
+  const context = new (window.AudioContext || window.webkitAudioContext)();
+  const oscillator = context.createOscillator();
+  const gain = context.createGain();
+
+  oscillator.frequency.value = frequency;
+  oscillator.type = "sine";
+  oscillator.connect(gain);
+  gain.connect(context.destination);
+
+  oscillator.start();
+  setTimeout(() => {
+    oscillator.stop();
+    context.close();
+  }, duration);
+};
