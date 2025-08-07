@@ -1,46 +1,9 @@
 import { useState, useEffect } from "react";
+import { Volume2 } from "lucide-react";
+import { morseDictionary } from "../utils/morseDictionary.js";
 
-const morseDict = {
-  a: ".-",
-  b: "-...",
-  c: "-.-.",
-  d: "-..",
-  e: ".",
-  f: "..-.",
-  g: "--.",
-  h: "....",
-  i: "..",
-  j: ".---",
-  k: "-.-",
-  l: ".-..",
-  m: "--",
-  n: "-.",
-  o: "---",
-  p: ".--.",
-  q: "--.-",
-  r: ".-.",
-  s: "...",
-  t: "-",
-  u: "..-",
-  v: "...-",
-  w: ".--",
-  x: "-..-",
-  y: "-.--",
-  z: "--..",
-  1: ".----",
-  2: "..---",
-  3: "...--",
-  4: "....-",
-  5: ".....",
-  6: "-....",
-  7: "--...",
-  8: "---..",
-  9: "----.",
-  0: "-----",
-  " ": "/",
-};
 
-const morseToText = Object.entries(morseDict).reduce((acc, [key, value]) => {
+const morseToText = Object.entries(morseDictionary).reduce((acc, [key, value]) => {
   acc[value] = key;
   return acc;
 }, {});
@@ -56,7 +19,7 @@ const Translator = () => {
     const translated = text
       .toLowerCase()
       .split("")
-      .map((char) => morseDict[char] || "")
+      .map((char) => morseDictionary[char] || "")
       .join(" ");
     setMorse(translated);
   };
@@ -117,36 +80,38 @@ const Translator = () => {
   };
 
   return (
-    <div className="w-full max-w-md p-6 bg-white dark:bg-gray-800 rounded shadow">
-      <h1 className="text-2xl font-bold mb-4 text-center text-gray-800 dark:text-white">
+    <div className="w-full max-w-md p-6 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl shadow-lg border border-gray-200/50 dark:border-gray-700/50">
+      <h1 className="text-3xl font-extrabold mb-6 text-center text-gray-800 dark:text-white">
         Morse Code Translator
       </h1>
 
-      <div className="mb-4 flex justify-center gap-4">
+      {/* Selector de modo */}
+      <div className="mb-6 flex justify-center gap-4">
         <button
           onClick={() => setMode("textToMorse")}
-          className={`px-4 py-2 rounded ${
+          className={`px-4 py-2 rounded-full font-medium transition-all duration-300 ${
             mode === "textToMorse"
-              ? "bg-blue-600 text-white"
-              : "bg-gray-300 dark:bg-gray-700 text-gray-800 dark:text-white"
+              ? "bg-blue-600 text-white shadow-md scale-105"
+              : "bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600"
           }`}
         >
           Texto → Morse
         </button>
         <button
           onClick={() => setMode("morseToText")}
-          className={`px-4 py-2 rounded ${
+          className={`px-4 py-2 rounded-full font-medium transition-all duration-300 ${
             mode === "morseToText"
-              ? "bg-blue-600 text-white"
-              : "bg-gray-300 dark:bg-gray-700 text-gray-800 dark:text-white"
+              ? "bg-blue-600 text-white shadow-md scale-105"
+              : "bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600"
           }`}
         >
           Morse → Texto
         </button>
       </div>
 
+      {/* Área de texto */}
       <textarea
-        className="w-full p-2 border rounded mb-4 dark:bg-gray-700 dark:text-white"
+        className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-blue-400 dark:focus:ring-blue-600 dark:bg-gray-700 dark:text-white transition"
         rows="4"
         value={text}
         onChange={(e) => setText(e.target.value)}
@@ -157,16 +122,18 @@ const Translator = () => {
         }
       />
 
+      {/* Botón de traducción */}
       <button
         onClick={() =>
           mode === "textToMorse" ? translateToMorse() : translateToText()
         }
-        className="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition"
+        className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 shadow transition"
       >
         {mode === "textToMorse" ? "Traducir a Morse" : "Traducir a Texto"}
       </button>
 
-      <div className="mt-4 p-2 bg-gray-200 dark:bg-gray-700 rounded text-sm text-gray-800 dark:text-white break-words flex flex-wrap gap-1 justify-start">
+      {/* Resultado */}
+      <div className="mt-4 p-3 bg-gray-100 dark:bg-gray-700 rounded-lg text-sm text-gray-800 dark:text-white break-words flex flex-wrap gap-1 justify-start border border-gray-300/50 dark:border-gray-600/50">
         {morse.split("").map((char, i) => (
           <span
             key={i}
@@ -181,24 +148,34 @@ const Translator = () => {
         ))}
       </div>
 
+      {/* Botón de copiar */}
       <button
         onClick={handleCopy}
         disabled={!morse}
-        className="w-full mt-2 bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600 transition disabled:opacity-50"
+        className="w-full mt-3 bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 shadow transition disabled:opacity-50"
       >
         Copiar al portapapeles
       </button>
-
       {copied && (
         <p className="text-green-600 text-sm mt-1 text-center">¡Copiado!</p>
       )}
 
+      {/* Botón de reproducir */}
       <button
         onClick={playMorseAudio}
         disabled={!morse || isPlaying}
-        className="w-full mt-2 bg-purple-500 text-white py-2 px-4 rounded hover:bg-purple-600 transition disabled:opacity-50"
+        className="w-full mt-2 bg-purple-500 text-white py-2 px-4 rounded-lg hover:bg-purple-600 shadow transition disabled:opacity-50"
       >
-        {isPlaying ? "Reproduciendo..." : "🔊 Reproducir Morse"}
+      {isPlaying ? (
+        <span className="flex items-center justify-center gap-2">
+          Reproduciendo...
+        </span>
+      ) : (
+        <span className="flex items-center justify-center gap-2">
+          <Volume2 size={18} />
+          Reproducir Morse
+        </span>
+      )}
       </button>
     </div>
   );
@@ -230,4 +207,3 @@ const playBeep = (duration = 100, frequency = 600, volume = 0.2) => {
     setTimeout(() => resolve(), duration);
   });
 };
-

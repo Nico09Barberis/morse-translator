@@ -122,64 +122,69 @@ const PracticePage = () => {
   return (
     <div
       className={`transition-colors duration-300 ${
-        darkMode ? "bg-gray-900 text-white" : "bg-white text-black"
-      }`}
-      >
+        darkMode
+          ? "bg-gradient-to-br from-neutral-900 via-slate-900 to-neutral-800 text-white"
+          : "bg-gradient-to-br from-white via-blue-50 to-white text-black"
+      } min-h-screen flex items-center justify-center pt-12 px-4`}
+    >
       <section
-        className={`min-h-screen p-4 max-w-md mx-auto text-center transition-colors duration-300 ${
-          darkMode ? "bg-gray-900 text-white" : "bg-white text-black"
-        }`}
+        className={`max-w-md w-full text-center p-6 rounded-xl shadow-xl
+        transition-colors duration-300
+        ${darkMode ? "bg-gray-800/80" : "bg-white/90"}
+      `}
       >
+        {/* Botón modo oscuro */}
         <button
           onClick={() => setDarkMode(!darkMode)}
-          className="absolute top-4 right-4 p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-100 shadow hover:scale-110 transition"
+          className="fixed top-2.5 right-4 z-50 p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-100 shadow hover:scale-110 transition-transform"
           aria-label="Toggle Dark Mode"
         >
           {darkMode ? <Sun size={20} /> : <Moon size={20} />}
         </button>
 
-        <h2 className="text-2xl font-bold mb-4">Modo Práctica - Morse</h2>
+        <h2 className="text-3xl font-extrabold mb-6 tracking-tight">
+          Modo Práctica - Morse
+        </h2>
 
-        <div className="mb-4 flex justify-center gap-4">
-          <button
-            className={`px-4 py-2 rounded ${
-              mode === "textToMorse"
-                ? "bg-blue-600 text-white"
-                : darkMode
-                ? "bg-gray-700 text-white"
-                : "bg-gray-300 text-gray-800"
-            }`}
-            onClick={() => handleModeChange("textToMorse")}
-          >
-            Texto → Morse
-          </button>
-          <button
-            className={`px-4 py-2 rounded ${
-              mode === "morseToText"
-                ? "bg-blue-600 text-white"
-                : darkMode
-                ? "bg-gray-700 text-white"
-                : "bg-gray-300 text-gray-800"
-            }`}
-            onClick={() => handleModeChange("morseToText")}
-          >
-            Morse → Texto
-          </button>
+        {/* Botones de modo */}
+        <div className="mb-6 flex justify-center gap-5">
+          {["textToMorse", "morseToText"].map((m) => (
+            <button
+              key={m}
+              onClick={() => handleModeChange(m)}
+              className={`px-5 py-2 rounded-full font-semibold transition
+              ${
+                mode === m
+                  ? "bg-[#4A6FA5] text-white shadow-md scale-105"
+                  : darkMode
+                  ? "bg-gray-700 text-white hover:bg-gray-600"
+                  : "bg-gray-300 text-gray-800 hover:bg-gray-400"
+              }
+            `}
+            >
+              {m === "textToMorse" ? "Texto → Morse" : "Morse → Texto"}
+            </button>
+          ))}
         </div>
 
-        <div className="mb-2 text-lg font-semibold">
+        {/* Pregunta */}
+        <div className="mb-3 text-lg font-semibold leading-relaxed">
           {mode === "textToMorse"
             ? "¿Cuál es el código Morse para la letra:"
             : "¿Qué letra o número representa este código Morse?"}
         </div>
 
-        <div className="text-5xl font-mono mb-6">
+        {/* Letra / Código actual */}
+        <div className="text-6xl font-mono font-bold mb-8 select-none">
           {mode === "textToMorse" ? current : <code>{current}</code>}
         </div>
 
+        {/* Formulario */}
         <form onSubmit={handleSubmit}>
           <input
-            className="border border-gray-300 rounded px-4 py-2 text-center w-full"
+            className="border border-gray-300 dark:border-gray-600 rounded-lg px-5 py-3 text-center w-full text-lg
+          focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400
+          dark:bg-gray-800 dark:text-white transition"
             type="text"
             placeholder={
               mode === "textToMorse"
@@ -192,22 +197,27 @@ const PracticePage = () => {
           />
           <button
             type="submit"
-            className="mt-4 w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
+            className="mt-5 w-full font-bold tracking-wider bg-[#4A6FA5] text-white py-3 rounded-lg hover:bg-[#36527c] shadow transition"
           >
             Verificar
           </button>
         </form>
 
+        {/* Botón siguiente */}
         <button
           onClick={nextQuestion}
-          className="mt-2 w-full bg-gray-400 text-black py-2 rounded hover:bg-gray-500 transition"
+          className="mt-4 w-full font-bold tracking-wider bg-gray-400 text-black py-3 rounded-lg hover:bg-gray-500 shadow transition"
         >
           Siguiente
         </button>
 
-        {feedback && <p className="mt-4 text-xl">{feedback}</p>}
+        {/* Feedback */}
+        {feedback && (
+          <p className="mt-6 text-xl font-bold min-h-[2rem]">{feedback}</p>
+        )}
 
-        <div className="mt-6 text-left text-lg">
+        {/* Score */}
+        <div className="mt-8 text-left text-lg font-medium tracking-wide select-none">
           <p>
             <strong>Aciertos:</strong> {score.correct} |{" "}
             <strong>Errores:</strong> {score.wrong}
