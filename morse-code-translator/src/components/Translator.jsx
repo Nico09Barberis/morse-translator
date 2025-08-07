@@ -206,19 +206,28 @@ const Translator = () => {
 
 export default Translator;
 
-const playBeep = (duration = 100, frequency = 600) => {
-  const context = new (window.AudioContext || window.webkitAudioContext)();
-  const oscillator = context.createOscillator();
-  const gain = context.createGain();
+let audioCtx = null;
 
-  oscillator.frequency.value = frequency;
+const playBeep = (duration = 100, frequency = 600, volume = 0.2) => {
+  if (!audioCtx) {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+
+  const oscillator = audioCtx.createOscillator();
+  const gainNode = audioCtx.createGain();
+
   oscillator.type = "sine";
-  oscillator.connect(gain);
-  gain.connect(context.destination);
+  oscillator.frequency.setValueAtTime(frequency, audioCtx.currentTime);
+  gainNode.gain.setValueAtTime(volume, audioCtx.currentTime);
+
+  oscillator.connect(gainNode);
+  gainNode.connect(audioCtx.destination);
 
   oscillator.start();
-  setTimeout(() => {
-    oscillator.stop();
-    context.close();
-  }, duration);
+  oscillator.stop(audioCtx.currentTime + duration / 1000);
+
+  return new Promise((resolve) => {
+    setTimeout(() => resolve(), duration);
+  });
 };
+
