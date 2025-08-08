@@ -82,7 +82,7 @@ const Translator = () => {
   return (
     <div className="w-full max-w-md p-6 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl shadow-lg border border-gray-200/50 dark:border-gray-700/50">
       <h1 className="text-3xl font-extrabold mb-6 text-center text-gray-800 dark:text-white">
-        Morse Code Translator
+        Traductor Codigo Morse
       </h1>
 
       {/* Selector de modo */}
@@ -127,7 +127,7 @@ const Translator = () => {
         onClick={() =>
           mode === "textToMorse" ? translateToMorse() : translateToText()
         }
-        className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 shadow transition"
+        className="w-full bg-blue-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-600 shadow transition"
       >
         {mode === "textToMorse" ? "Traducir a Morse" : "Traducir a Texto"}
       </button>
@@ -152,7 +152,7 @@ const Translator = () => {
       <button
         onClick={handleCopy}
         disabled={!morse}
-        className="w-full mt-3 bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 shadow transition disabled:opacity-50"
+        className="w-full mt-3 bg-green-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-green-600 shadow transition disabled:opacity-50"
       >
         Copiar al portapapeles
       </button>
@@ -164,7 +164,7 @@ const Translator = () => {
       <button
         onClick={playMorseAudio}
         disabled={!morse || isPlaying}
-        className="w-full mt-2 bg-purple-500 text-white py-2 px-4 rounded-lg hover:bg-purple-600 shadow transition disabled:opacity-50"
+        className="w-full mt-2 bg-purple-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-purple-600 shadow transition disabled:opacity-50"
       >
       {isPlaying ? (
         <span className="flex items-center justify-center gap-2">

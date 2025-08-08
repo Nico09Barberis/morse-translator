@@ -34,7 +34,7 @@ const Navbar = () => {
         <div className="flex-1 text-center md:text-left">
           <h1 className="text-xl font-bold tracking-tight text-gray-800 dark:text-white">
             <Link to="/" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-              Morse Code App
+              Morse Express
             </Link>
           </h1>
         </div>

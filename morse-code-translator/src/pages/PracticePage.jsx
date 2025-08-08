@@ -125,7 +125,7 @@ const PracticePage = () => {
         darkMode
           ? "bg-gradient-to-br from-neutral-900 via-slate-900 to-neutral-800 text-white"
           : "bg-gradient-to-br from-white via-blue-50 to-white text-black"
-      } min-h-screen flex items-center justify-center pt-12 px-4`}
+      } min-h-screen flex items-center justify-center px-4`}
     >
       <section
         className={`max-w-md w-full text-center p-6 rounded-xl shadow-xl

@@ -3,7 +3,7 @@ import React from "react";
 const Footer = () => {
   return (
     <footer className="w-full border-t border-black bg-[#090f1b] py-4 text-center text-sm text-[#F9FAFB]">
-      © {new Date().getFullYear()} Morse Code App. Todos los derechos reservados. 
+      © {new Date().getFullYear()} Barberis Nicolas. Todos los derechos reservados. 
       <a
         href="https://github.com/tuusuario/morse-translator"
         target="_blank"
