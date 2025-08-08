@@ -56,7 +56,7 @@ const Navbar = () => {
       {/* Links en mobile */}
       {isOpen && (
         <div
-          className="md:hidden px-4 pb-4 flex flex-col gap-2 animate-slide-down"
+          className="md:hidden px-4 pb-4 flex flex-col gap-3 animate-slide-down"
         >
           <Link to="/translator" className={linkClasses("/translator")} onClick={toggleMenu}>
             Traductor
